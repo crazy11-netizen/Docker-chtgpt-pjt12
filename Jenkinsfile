@@ -1,19 +1,28 @@
 pipeline {
+
     agent any
 
-    environment {
-        // Ensures shell steps can find docker binaries across standard installation paths
-        PATH = "/usr/local/bin:/usr/bin:/bin:${env.PATH}"
+    options {
+        timestamps()
+        disableConcurrentBuilds()
     }
 
     stages {
-        stage('Checkout') {
+
+        stage('Environment Check') {
             steps {
-                checkout scm
+                sh '''
+                    echo "===== Jenkins Environment ====="
+                    whoami
+                    pwd
+                    docker --version
+                    docker compose version
+                    git --version
+                '''
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Images') {
             steps {
                 sh 'docker compose build'
             }
@@ -25,16 +34,34 @@ pipeline {
             }
         }
 
-        stage('Start Application') {
+        stage('Deploy Application') {
             steps {
                 sh 'docker compose up -d'
             }
         }
 
-        stage('Verify Running Containers') {
+        stage('Verify Deployment') {
             steps {
-                sh 'docker compose ps'
+                sh '''
+                    docker compose ps
+                    docker ps
+                '''
             }
+        }
+    }
+
+    post {
+
+        success {
+            echo 'Deployment Successful!'
+        }
+
+        failure {
+            echo 'Deployment Failed!'
+        }
+
+        always {
+            sh 'docker image prune -f || true'
         }
     }
 }
