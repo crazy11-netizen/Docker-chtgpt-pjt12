@@ -65,7 +65,7 @@ pipeline {
 
         stage('Start Application') {
             steps {
-                sh 'docker compose up -p inventory-app -d'
+                sh 'docker compose -p inventory-app up -d'
             }
         }
 
