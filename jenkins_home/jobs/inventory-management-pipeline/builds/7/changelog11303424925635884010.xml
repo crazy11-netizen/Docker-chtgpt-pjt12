@@ -1,0 +1,22 @@
+commit e3d1a9a0263fc6f3d8c6a5d260fbeefdb12ad967
+tree dfd8d807fbe1de8518b01660ece8ab081ae2dd75
+parent c40a217455742c94e10ede167d02dbbcf93a0cca
+author root <root@ip-10-0-15-107.ec2.internal> 2026-07-24 06:35:46 +0000
+committer root <root@ip-10-0-15-107.ec2.internal> 2026-07-24 06:35:46 +0000
+
+    added changes to jenkinsfile
+
+
+:100644 100644 de4947abbe602b0468c0ae8d4fa7cfb927c9ffac adfd893477c5a3080d647a198ca3fe247b5767c3 M	Jenkinsfile
+:000000 100644 0000000000000000000000000000000000000000 8ed81e06a3e24db0b5285ce930abf84fcb2be8d2 A	jenkins_home/jobs/inventory-management-pipeline/builds/6/build.xml
+:000000 100644 0000000000000000000000000000000000000000 c31c9d64e68e8f1a38a687671555c86059e10fa8 A	jenkins_home/jobs/inventory-management-pipeline/builds/6/changelog13094363487611225308.xml
+:000000 100644 0000000000000000000000000000000000000000 a5769819562f18dec81ac113883263d4efc7a82a A	jenkins_home/jobs/inventory-management-pipeline/builds/6/log
+:000000 100644 0000000000000000000000000000000000000000 962d4d1cfb9c784ffc0c1f7cec42849666167d28 A	jenkins_home/jobs/inventory-management-pipeline/builds/6/log-index
+:000000 100644 0000000000000000000000000000000000000000 1671eb19325e766f54210613dc5cf049336905b9 A	jenkins_home/jobs/inventory-management-pipeline/builds/6/pipeline-graph-view-allsteps.v3.json
+:000000 100644 0000000000000000000000000000000000000000 fda115a97de9d1c066fcf8a625a6014210bfe409 A	jenkins_home/jobs/inventory-management-pipeline/builds/6/pipeline-graph-view-tree.v3.json
+:000000 100644 0000000000000000000000000000000000000000 5f7dc531f6695b143f42854a03b1b2a02660e68a A	jenkins_home/jobs/inventory-management-pipeline/builds/6/workflow-completed/flowNodeStore.xml
+:100644 100644 ea7b520ca46d3592bf4391e434beb7ef6e6df348 b99f738049d6f9b50e25635dd7a9583953c174b3 M	jenkins_home/jobs/inventory-management-pipeline/builds/permalinks
+:100644 100644 1e8b314962144c26d5e0e50fd29d2ca327864913 7f8f011eb73d6043d2e6db9d2c101195ae2801f2 M	jenkins_home/jobs/inventory-management-pipeline/nextBuildNumber
+:100644 100644 5de2ffd5745ec05d8f9540dc49f31351ad52f4a6 a16bec65edd26244fadc3eb7dc9de58985afda93 M	jenkins_home/queue.xml
+:160000 160000 dcd3e936300ad3ad6a5e31711b3cd524b2d5d59d c40a217455742c94e10ede167d02dbbcf93a0cca M	jenkins_home/workspace/inventory-management-pipeline
+:160000 160000 dcd3e936300ad3ad6a5e31711b3cd524b2d5d59d c40a217455742c94e10ede167d02dbbcf93a0cca M	jenkins_home/workspace/inventory-management-pipeline@script/7a447e4380c1f1db07ecd7bdfa3e2a5af970ed1629722c2afcc4b1bd297a1988
