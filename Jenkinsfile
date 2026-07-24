@@ -59,13 +59,13 @@ pipeline {
 
         stage('Stop Existing Containers') {
             steps {
-                sh 'docker compose down --remove-orphans || true'
+                sh 'docker compose -p inventory-app down --remove-orphans || true'
             }
         }
 
         stage('Start Application') {
             steps {
-                sh 'docker compose up -d'
+                sh 'docker compose up -p inventory-app -d'
             }
         }
 
