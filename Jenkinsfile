@@ -38,31 +38,24 @@ pipeline {
             }
         }
 
-
-	stage('Push Docker Image') {
-    		steps {
-        		withCredentials([usernamePassword(
-            		credentialsId: 'dockerhub-creds',
-           		usernameVariable: 'DOCKER_USER',
-            		passwordVariable: 'DOCKER_PASS'
-        	)]) {
-            	sh '''
-                	echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-                	docker tag inventory-app:latest $DOCKER_USER/inventory-management:${BUILD_NUMBER}
-
-                	docker tag inventory-app:latest $DOCKER_USER/inventory-management:latest
-
-                	docker push $DOCKER_USER/inventory-management:${BUILD_NUMBER}
-
-               		 docker push $DOCKER_USER/inventory-management:latest
-
-                	docker logout
-            '''
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag inventory-app:latest $DOCKER_USER/inventory-management:${BUILD_NUMBER}
+                        docker tag inventory-app:latest $DOCKER_USER/inventory-management:latest
+                        docker push $DOCKER_USER/inventory-management:${BUILD_NUMBER}
+                        docker push $DOCKER_USER/inventory-management:latest
+                        docker logout
+                    '''
+                }
+            }
         }
-    }
-}
-
 
         stage('Stop Existing Containers') {
             steps {
@@ -101,7 +94,7 @@ pipeline {
                 sh '''
                     echo "===== Application Health Check ====="
                     sleep 10
-                    curl --fail http://localhost:5000 || (echo "Health check failed!" && exit 1)
+                    curl --fail http://localhost:80 || (echo "Health check failed!" && exit 1)
                 '''
             }
         }
