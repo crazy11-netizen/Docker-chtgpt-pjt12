@@ -1,9 +1,12 @@
 pipeline {
-
     agent any
 
-    stages {
+    environment {
+        // Ensures shell steps can find docker binaries across standard installation paths
+        PATH = "/usr/local/bin:/usr/bin:/bin:${env.PATH}"
+    }
 
+    stages {
         stage('Checkout') {
             steps {
                 checkout scm
@@ -33,7 +36,5 @@ pipeline {
                 sh 'docker compose ps'
             }
         }
-
     }
-
 }
