@@ -53,5 +53,15 @@
         <tokenList/>
       </tokenStore>
     </jenkins.security.ApiTokenProperty>
+    <hudson.plugins.favorite.user.FavoriteUserProperty plugin="favorite@2.267.vb_90d08408081">
+      <data class="concurrent-hash-map"/>
+    </hudson.plugins.favorite.user.FavoriteUserProperty>
+    <jenkins.security.LastGrantedAuthoritiesProperty>
+      <roles>
+        <string>authenticated</string>
+        <string>FACTOR_PASSWORD</string>
+      </roles>
+      <timestamp>1784873560144</timestamp>
+    </jenkins.security.LastGrantedAuthoritiesProperty>
   </properties>
 </user>
