@@ -38,6 +38,32 @@ pipeline {
             }
         }
 
+
+	stage('Push Docker Image') {
+    		steps {
+        		withCredentials([usernamePassword(
+            		credentialsId: 'dockerhub-creds',
+           		usernameVariable: 'DOCKER_USER',
+            		passwordVariable: 'DOCKER_PASS'
+        	)]) {
+            	sh '''
+                	echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                	docker tag inventory-app:latest $DOCKER_USER/inventory-management:${BUILD_NUMBER}
+
+                	docker tag inventory-app:latest $DOCKER_USER/inventory-management:latest
+
+                	docker push $DOCKER_USER/inventory-management:${BUILD_NUMBER}
+
+               		 docker push $DOCKER_USER/inventory-management:latest
+
+                	docker logout
+            '''
+        }
+    }
+}
+
+
         stage('Stop Existing Containers') {
             steps {
                 sh 'docker compose down --remove-orphans || true'
