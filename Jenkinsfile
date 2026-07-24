@@ -1,13 +1,12 @@
 pipeline {
-
     agent any
 
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Environment Check') {
             steps {
@@ -22,6 +21,17 @@ pipeline {
             }
         }
 
+        stage('Build Info') {
+            steps {
+                sh '''
+                    echo "===== Build Metadata ====="
+                    echo "Build Number: ${BUILD_NUMBER}"
+                    echo "Build ID: ${BUILD_ID}"
+                    echo "Workspace: ${WORKSPACE}"
+                '''
+            }
+        }
+
         stage('Build Docker Images') {
             steps {
                 sh 'docker compose build'
@@ -30,38 +40,62 @@ pipeline {
 
         stage('Stop Existing Containers') {
             steps {
-                sh 'docker compose down || true'
+                sh 'docker compose down --remove-orphans || true'
             }
         }
 
-        stage('Deploy Application') {
+        stage('Start Application') {
             steps {
                 sh 'docker compose up -d'
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Initialize Database') {
+            steps {
+                // Wait for MySQL to finish booting, then seed the database schema/data
+                sh 'sleep 10'
+                sh 'docker exec -i inventory-mysql mysql -u inventory_user -pinventory_password inventory_db < ./database/init.sql || true'
+            }
+        }
+
+        stage('Verify Images & Containers') {
             steps {
                 sh '''
-                    docker compose ps
+                    echo "===== Docker Images ====="
+                    docker images
+
+                    echo "===== Running Containers ====="
                     docker ps
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                    echo "===== Application Health Check ====="
+                    sleep 10
+                    curl --fail http://localhost:5000 || (echo "Health check failed!" && exit 1)
                 '''
             }
         }
     }
 
     post {
-
-        success {
-            echo 'Deployment Successful!'
+        always {
+            sh '''
+                echo "===== Cleaning Up Unused Docker Resources ====="
+                docker image prune -f
+                docker container prune -f
+                docker builder prune -f
+            '''
         }
 
         failure {
-            echo 'Deployment Failed!'
-        }
-
-        always {
-            sh 'docker image prune -f || true'
+            sh '''
+                echo "===== Pipeline Failed! Dumping Container Logs ====="
+                docker compose logs
+            '''
         }
     }
 }

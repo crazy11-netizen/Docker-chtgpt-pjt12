@@ -1,83 +1,52 @@
 version: "3.9"
 
 services:
-
+  # MySQL Database Service
   mysql:
-
     image: mysql:8.4
-
     container_name: inventory-mysql
-
     restart: always
-
+    env_file:
+      - .env
     environment:
-
-      MYSQL_ROOT_PASSWORD: rootpassword
-
-      MYSQL_DATABASE: inventory_db
-
-      MYSQL_USER: inventory_user
-
-      MYSQL_PASSWORD: inventory_password
-
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-
-      - "3306:3306"
-
+      - "${MYSQL_PORT:-3306}:3306"
     volumes:
-
       - mysql-data:/var/lib/mysql
-
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-
     networks:
-
       - inventory-network
 
-
-
+  # Flask Application Service
   flask:
-
     build: .
-
     container_name: inventory-flask
-
     restart: always
-
-    ports:
-
-      - "5000:5000"
-
-    depends_on:
-
-      - mysql
-
+    env_file:
+      - .env
     environment:
-
       MYSQL_HOST: mysql
-
-      MYSQL_USER: inventory_user
-
-      MYSQL_PASSWORD: inventory_password
-
-      MYSQL_DB: inventory_db
-
-      MYSQL_PORT: 3306
-
-      SECRET_KEY: inventory-secret-key
-
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB: ${MYSQL_DB}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      SECRET_KEY: ${SECRET_KEY}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
     networks:
-
       - inventory-network
 
-
-
-networks:
-
-  inventory-network:
-
-
-
+# Top-level Volumes definition for MySQL persistence
 volumes:
-
   mysql-data:
+
+# Top-level Network definition for container communication
+networks:
+  inventory-network:
+    driver: bridge
